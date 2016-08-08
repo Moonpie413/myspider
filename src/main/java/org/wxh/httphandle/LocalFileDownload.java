@@ -1,11 +1,9 @@
 package org.wxh.httphandle;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 import org.wxh.utils.EnvironmentUtil;
@@ -36,55 +34,33 @@ public class LocalFileDownload implements IFileDownload {
 
     @Override
     public void save(byte[] data, String filePath) {
-        DataOutputStream outputStream = null;
-        try {
-            outputStream = new DataOutputStream(new FileOutputStream(filePath));
+        try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(filePath))) {
             for (byte aData : data) {
                 outputStream.write(aData);
             }
+            outputStream.flush();
         } catch (FileNotFoundException e) {
             logger.error("文件路径" + filePath + "找不到");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     @Override
     public void save(InputStream inputStream, String filePath) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(filePath);
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
             int temp;
             while ((temp = inputStream.read()) != -1) {
                 outputStream.write(temp);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                inputStream.close();
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-
     }
 
     @Override
     public String downloadFile(String url) {
-        HttpClient httpClient = HttpClientUtil.getDefaultHttpClient();
         HttpGet get = new HttpGet(url);
         String filePath = null;
         HttpResponse response;
