@@ -43,4 +43,8 @@ public interface ILinkQueue {
      * @return
      */
     boolean isVisedUrlEmpty();
+
+    boolean isUnVisedUrlEmpty();
+
+    String unVisedUrlDeque();
 }

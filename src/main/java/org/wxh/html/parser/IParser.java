@@ -10,8 +10,22 @@ import java.util.Set;
  */
 public interface IParser {
 
+    /**
+     * 解析本地html
+     * @param filePath 文件路径
+     * @param baseUri 网址前缀
+     * @return
+     * @throws IOException
+     */
+    Set<String> getAllLinks(String filePath, String baseUri) throws IOException;
 
-    Set<String> getAllLinks(String filePath, String baseUrl) throws IOException;
+    /**
+     * 解析本地html
+     * @param filePath 文件路径
+     * @return
+     * @throws IOException
+     */
+    Set<String> getAllLinks(String filePath) throws IOException;
     /**
      * 获取页面上所有链接
      * @return 所有链接

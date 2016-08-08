@@ -16,12 +16,12 @@ public class HashLinkedQueue implements ILinkQueue {
     /**
      * 保存已访问队列
      */
-    private static HashSet<String> vised = new HashSet<>();
+    private HashSet<String> vised = new HashSet<>();
 
     /**
      * 未访问队列
      */
-    private static IQueue unvised = new LinkedListQueue();
+    private IQueue unvised = new LinkedListQueue();
 
     @Override
     public IQueue getUnvisedUrl() {
@@ -55,5 +55,15 @@ public class HashLinkedQueue implements ILinkQueue {
     @Override
     public boolean isVisedUrlEmpty() {
         return vised.isEmpty();
+    }
+
+    @Override
+    public boolean isUnVisedUrlEmpty() {
+        return unvised.isEmpty();
+    }
+
+    @Override
+    public String unVisedUrlDeque() {
+        return unvised.deQueue();
     }
 }

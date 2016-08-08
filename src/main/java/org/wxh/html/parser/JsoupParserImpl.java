@@ -24,6 +24,18 @@ public class JsoupParserImpl implements IParser {
     @Override
     public Set<String> getAllLinks(String filePath, String baseUri) throws IOException {
         Set<String> urlSet = new HashSet<>();
+        Document document = Jsoup.parse(new File(filePath), charset, baseUri);
+        Elements links = document.getElementsByTag("a");
+        for (Element link : links) {
+            String linkHref = link.attr("href");
+            urlSet.add(linkHref);
+        }
+        return urlSet;
+    }
+
+    @Override
+    public Set<String> getAllLinks(String filePath) throws IOException {
+        Set<String> urlSet = new HashSet<>();
         Document document = Jsoup.parse(new File(filePath), charset);
         Elements links = document.getElementsByTag("a");
         for (Element link : links) {

@@ -4,22 +4,16 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.wxh.httphandle.IFileDownload;
 import org.wxh.httphandle.LocalFileDownload;
-import org.wxh.utils.EnvironmentUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Maroon on 2016/8/8.
  * project: MySpider
  */
-public class JsoupParserTest {
+public class JsoupParserImplTest {
     private IFileDownload fileDownload = new LocalFileDownload();
-    private IParser parser = new JsoupParser();
+    private IParser parser = new JsoupParserImpl();
     private Logger logger = Logger.getLogger(this.getClass());
 
     @Test

@@ -19,7 +19,7 @@ public class LinkedListQueue implements IQueue {
 
     @Override
     public String deQueue() {
-        return this.linkedList.getFirst();
+        return this.linkedList.removeFirst();
     }
 
     @Override
