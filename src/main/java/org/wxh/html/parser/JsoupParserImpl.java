@@ -16,7 +16,7 @@ import java.util.Set;
  * Created by Maroon on 2016/8/8.
  * project: MySpider
  */
-public class JsoupParser implements IParser {
+public class JsoupParserImpl implements IParser {
 
     private Logger logger = Logger.getLogger(this.getClass());
     private String charset = "UTF-8";
