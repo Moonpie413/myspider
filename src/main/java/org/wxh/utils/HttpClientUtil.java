@@ -12,6 +12,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.wxh.httphandle.HeaderBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,39 +27,24 @@ import java.util.stream.Collectors;
  */
 public class HttpClientUtil {
 
-    public static List<Header> defaultHeaders;
     private static Logger logger = Logger.getLogger(HttpClientUtil.class);
+    private Properties properties;
 
-    static {
-        defaultHeaders = new ArrayList<>();
-        Properties prop = null;
-        try {
-            prop = PropUtil.getProperties("header");
-            Header userAgent = new BasicHeader("User-Agent", prop.getProperty("header.User-Agent"));
-            Header accept = new BasicHeader("Accept", prop.getProperty("header.Accept"));
-            Header acceptEncoding = new BasicHeader("Accept-Encoding", prop.getProperty(prop.getProperty("header.Accept-Encoding")));
-            Header acceptLanguage = new BasicHeader("Accept-Language", prop.getProperty("header.Accept-Language"));
-            defaultHeaders.add(userAgent);
-            defaultHeaders.add(accept);
-            defaultHeaders.add(acceptEncoding);
-            defaultHeaders.add(acceptLanguage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (prop != null) {
-                prop.clear();
-            }
-        }
-    }
     private HttpClientBuilder clientBuilder;
 
-    private HttpClientUtil() {}
+    private HttpClientUtil() {
+        try {
+            properties = PropUtil.getProperties("http");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static HttpClientUtil getInstance() {
         HttpClientUtil util = new HttpClientUtil();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        connManager.setMaxTotal(200);
-        connManager.setDefaultMaxPerRoute(20);
+        connManager.setMaxTotal(Integer.parseInt(util.properties.getProperty("httpClient.maxTotal")));
+        connManager.setDefaultMaxPerRoute(Integer.parseInt(util.properties.getProperty("httpClient.defaultMaxPerRoute")));
         util.clientBuilder = HttpClientBuilder.create();
         util.clientBuilder.setConnectionManager(connManager);
         return util;

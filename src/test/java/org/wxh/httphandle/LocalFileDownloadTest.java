@@ -25,6 +25,6 @@ public class LocalFileDownloadTest {
 
     @Test
     public void testDownloadFile() throws Exception {
-        this.fileDownload.downloadFile("http://www.inexus.co/portal.php");
+        this.fileDownload.downloadFile("http://img0.imgtn.bdimg.com/it/u=4176011454,2736288988&fm=21&gp=0.jpg");
     }
 }
