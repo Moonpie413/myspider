@@ -16,12 +16,12 @@ public class HashLinkedQueue implements ILinkQueue {
     /**
      * 保存已访问队列
      */
-    private HashSet<String> vised = new HashSet<>();
+    private static HashSet<String> vised = new HashSet<>();
 
     /**
      * 未访问队列
      */
-    private IQueue unvised = new LinkedListQueue();
+    private static IQueue unvised = new LinkedListQueue();
 
     @Override
     public IQueue getUnvisedUrl() {

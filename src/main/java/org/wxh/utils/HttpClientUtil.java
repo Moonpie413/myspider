@@ -28,23 +28,29 @@ import java.util.stream.Collectors;
 public class HttpClientUtil {
 
     private static Logger logger = Logger.getLogger(HttpClientUtil.class);
-    private Properties properties;
+    private static Properties properties;
+    private static int maxTotal;
+    private static int defaultMaxPerRoute;
 
-    private HttpClientBuilder clientBuilder;
-
-    private HttpClientUtil() {
+    static {
         try {
             properties = PropUtil.getProperties("http");
+            maxTotal = Integer.parseInt(properties.getProperty("httpClient.maxTotal"));
+            defaultMaxPerRoute = Integer.parseInt(properties.getProperty("httpClient.defaultMaxPerRoute"));
+            properties.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    private HttpClientBuilder clientBuilder;
+    private HttpClientUtil() {}
 
     public static HttpClientUtil getInstance() {
-        HttpClientUtil util = new HttpClientUtil();
+        HttpClientUtil util = null;
+        util = new HttpClientUtil();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        connManager.setMaxTotal(Integer.parseInt(util.properties.getProperty("httpClient.maxTotal")));
-        connManager.setDefaultMaxPerRoute(Integer.parseInt(util.properties.getProperty("httpClient.defaultMaxPerRoute")));
+        connManager.setMaxTotal(maxTotal);
+        connManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
         util.clientBuilder = HttpClientBuilder.create();
         util.clientBuilder.setConnectionManager(connManager);
         return util;

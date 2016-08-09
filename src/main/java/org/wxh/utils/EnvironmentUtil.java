@@ -7,14 +7,16 @@ import java.io.IOException;
  * project: MySpider
  */
 public class EnvironmentUtil {
-
-    public static String getDownloadPath() {
-        String pathPerfix = null;
+    private static String pathPerfix;
+    static {
         try {
-             pathPerfix = PropUtil.getProperties("file").getProperty("file.winpath");
+            pathPerfix = PropUtil.getProperties("file").getProperty("file.winpath");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getDownloadPath() {
         return pathPerfix;
     }
 }
