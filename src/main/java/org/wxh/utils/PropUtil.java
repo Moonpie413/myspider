@@ -25,7 +25,7 @@ public class PropUtil {
     /**
      * 获取properties对象
      * @author wangxh
-     * @param fileName
+     * @param fileName 文件名
      * @return
      * @throws IOException
      */
@@ -49,7 +49,7 @@ public class PropUtil {
     /**
      * 获取属性配置文件的map
      * @author wangxh
-     * @param fileName
+     * @param fileName 文件名
      * @return
      */
     public static Map<String, Object> getPropMap(String fileName) {
@@ -65,11 +65,9 @@ public class PropUtil {
                 logger.debug("读取配置文件{ " + fileName + " }成功");
             }
             Set<Entry<Object, Object>> set = prop.entrySet();
-            Iterator<Entry<Object, Object>> propIter = set.iterator();
-            while (propIter.hasNext()) {
-				Entry<Object, Object> entry = propIter.next();
-				resultMap.put((String) entry.getKey(), entry.getValue());
-			}
+            for (Entry<Object, Object> entry : set) {
+                resultMap.put((String) entry.getKey(), entry.getValue());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
