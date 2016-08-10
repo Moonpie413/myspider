@@ -1,11 +1,16 @@
 package org.wxh.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Created by Maroon on 2016/8/7.
@@ -14,29 +19,61 @@ import java.util.Properties;
 public class PropUtil {
 
     private static Logger logger = Logger.getLogger(PropUtil.class);
-    private static Properties prop = new Properties();
 
     private PropUtil() {}
 
-    public static Properties getProperties(String propName) throws IOException {
-        String resourceName = propName + ".properties";
-        System.out.println(PropUtil.class.getClassLoader().getResource(""));
-        InputStream in = PropUtil.class.getClassLoader().getResourceAsStream(resourceName);
-        try {
+    /**
+     * 获取properties对象
+     * @author wangxh
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static Properties getProperties(String fileName) throws IOException {
+        Properties prop = new Properties();
+    	String resourceName = null;
+    	if (StringUtils.isNotBlank(fileName)) {
+			resourceName = fileName + ".properties";
+		}
+        try (InputStream in = PropUtil.class.getClassLoader().getResourceAsStream(resourceName)) {
             if (in != null) {
                 prop.load(in);
-                logger.debug("读取配置文件{ " + propName + " }成功");
-            } else {
-                throw new FileNotFoundException(resourceName + " not found");
+                logger.debug("读取配置文件{ " + fileName + " }成功");
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
         return prop;
+    }
+    
+    /**
+     * 获取属性配置文件的map
+     * @author wangxh
+     * @param fileName
+     * @return
+     */
+    public static Map<String, Object> getPropMap(String fileName) {
+        Properties prop = new Properties();
+        Map<String, Object> resultMap = new HashMap<>();
+    	String resourceName = null;
+    	if (StringUtils.isNotBlank(fileName)) {
+			resourceName = fileName + ".properties";
+		}
+        try (InputStream in = PropUtil.class.getClassLoader().getResourceAsStream(resourceName)) {
+            if (in != null) {
+                prop.load(in);
+                logger.debug("读取配置文件{ " + fileName + " }成功");
+            }
+            Set<Entry<Object, Object>> set = prop.entrySet();
+            Iterator<Entry<Object, Object>> propIter = set.iterator();
+            while (propIter.hasNext()) {
+				Entry<Object, Object> entry = propIter.next();
+				resultMap.put((String) entry.getKey(), entry.getValue());
+			}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    	return resultMap;
     }
 
 }

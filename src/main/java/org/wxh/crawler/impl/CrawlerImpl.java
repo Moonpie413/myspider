@@ -38,10 +38,7 @@ public class CrawlerImpl implements ICrawler {
     @Override
     public void crawing() {
         IFileDownload fileDownload = new LocalFileDownload();
-        while (!this.linkQueue.isUnVisedUrlEmpty() && this.linkQueue.getVisedUrlNum() < 10) {
-
-            logger.debug("visedUrlNum" + this.linkQueue.getVisedUrlNum());
-
+        while (!this.linkQueue.isUnVisedUrlEmpty() && this.linkQueue.getVisedUrlNum() < 100) {
             String target = this.linkQueue.unVisedUrlDeque();
             if (StringUtils.isBlank(target)) {
                 this.logger.error("请求的url不存在");
@@ -53,7 +50,7 @@ public class CrawlerImpl implements ICrawler {
             logger.info(target + "已下载至 -> " + path);
             this.linkQueue.addVisedUrl(target);
             try {
-                Set<String> urlLinks = this.parser.getAllLinks(path);
+                Set<String> urlLinks = this.parser.getAllLinks(path, "http://www.douban.com");
                 for (String unvisedLink : urlLinks) {
                     this.linkQueue.addUnvisedUrl(unvisedLink);
                 }
