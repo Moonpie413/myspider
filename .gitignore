@@ -6,4 +6,8 @@
 .idea
 *.iml
 
+# eclipse project files
+.project
+.classpath
+.settings
 target/
