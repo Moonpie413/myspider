@@ -9,8 +9,10 @@ import java.util.Date;
  * project: MySpider
  */
 public class CrawUrl implements Serializable {
-	
-    public CrawUrl() {
+
+	private static final long serialVersionUID = 789595716090639756L;
+
+	public CrawUrl() {
 		super();
 	}
     
