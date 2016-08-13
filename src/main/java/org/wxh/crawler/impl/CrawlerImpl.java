@@ -1,6 +1,6 @@
 package org.wxh.crawler.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import org.wxh.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.wxh.crawler.ICrawler;
 import org.wxh.html.parser.IParser;
@@ -22,11 +22,13 @@ public class CrawlerImpl implements ICrawler {
     private Logger logger = Logger.getLogger(this.getClass());
     private ILinkQueue linkQueue;
     private IParser parser;
+    private String baseUrl;
 
-    public CrawlerImpl(List<String> seedList) {
+    public CrawlerImpl(List<String> seedList, String baseUrl) {
         this.linkQueue = new HashLinkedQueue();
         this.parser = new JsoupParserImpl();
         this.initWithSeed(seedList);
+        this.baseUrl = baseUrl;
     }
 
     public void initWithSeed(List<String> seedList) {
@@ -39,7 +41,8 @@ public class CrawlerImpl implements ICrawler {
     public void crawing() {
         IFileDownload fileDownload = new LocalFileDownload();
         while (!this.linkQueue.isUnVisedUrlEmpty() && this.linkQueue.getVisedUrlNum() < 100) {
-            String target = this.linkQueue.unVisedUrlDeque();
+            //调用handleRelatuvePath处理url
+            String target = StringUtils.handleRelativePath(this.linkQueue.unVisedUrlDeque(), this.baseUrl);
             if (StringUtils.isBlank(target)) {
                 this.logger.error("请求的url不存在");
             }
@@ -50,7 +53,7 @@ public class CrawlerImpl implements ICrawler {
             logger.info(target + "已下载至 -> " + path);
             this.linkQueue.addVisedUrl(target);
             try {
-                Set<String> urlLinks = this.parser.getAllLinks(path, "http://www.douban.com");
+                Set<String> urlLinks = this.parser.getAllLinks(path);
                 for (String unvisedLink : urlLinks) {
                     this.linkQueue.addUnvisedUrl(unvisedLink);
                 }

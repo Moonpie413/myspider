@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 public class HttpClientUtil {
 
     private static Logger logger = Logger.getLogger(HttpClientUtil.class);
-    private static int maxTotal;
-    private static int defaultMaxPerRoute;
     private static Map<String, Object> resultMap = PropUtil.getPropMap("http");
     private HttpClientBuilder clientBuilder;
     private HttpClientUtil() {}
@@ -38,8 +36,10 @@ public class HttpClientUtil {
         HttpClientUtil util = null;
         util = new HttpClientUtil();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        connManager.setMaxTotal((Integer) resultMap.get("httpClient.maxTotal"));
-        connManager.setDefaultMaxPerRoute((Integer) resultMap.get("ttpClient.defaultMaxPerRoute"));
+        int maxTotal = Integer.parseInt((String) resultMap.get("httpClient.maxTotal"));
+        int defaultMaxPerRoute = Integer.parseInt((String) resultMap.get("httpClient.defaultMaxPerRoute"));
+        connManager.setMaxTotal(maxTotal);
+        connManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
         util.clientBuilder = HttpClientBuilder.create();
         util.clientBuilder.setConnectionManager(connManager);
         return util;

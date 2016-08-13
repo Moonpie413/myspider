@@ -1,5 +1,4 @@
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.HttpClient;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -11,7 +10,6 @@ import org.junit.Test;
 public class SimpleTest {
 
     private Logger logger = Logger.getLogger(this.getClass());
-    private HttpClient httpClient;
 
     @Test
     public void testLog() {

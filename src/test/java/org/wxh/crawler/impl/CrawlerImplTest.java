@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.wxh.crawler.ICrawler;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Maroon on 2016/8/8.
@@ -15,12 +13,13 @@ import java.util.Set;
  */
 public class CrawlerImplTest {
     private ICrawler crawler;
+    private String baseUrl = "http://www.douban.com/";
 
     @Before
     public void init() {
         List<String > seedList = new ArrayList<>();
         seedList.add("https://www.douban.com/");
-        this.crawler = new CrawlerImpl(seedList);
+        this.crawler = new CrawlerImpl(seedList, baseUrl);
     }
 
     @Test
