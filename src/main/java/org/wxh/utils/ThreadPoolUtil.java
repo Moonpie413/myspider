@@ -21,8 +21,9 @@ public class ThreadPoolUtil {
 
     //初始化线程池
     private void init() {
+        ThreadCrawler crawler = new ThreadCrawler();
         for (int i=0; i<THREAD_NUM; i++) {
-            threadList.add(new Thread(new ThreadCrawler(), "爬虫线程" + i));
+            threadList.add(new Thread(crawler, "爬虫线程" + i));
         }
         logger.debug("线程池初始化成功");
     }

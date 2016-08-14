@@ -29,11 +29,6 @@ public class ThreadCrawlerTest {
     }
 
     public static void main(String[] args) {
-        Date began = new Date();
         ThreadPoolUtil.getInstance().startAll();
-//        Thread thread = new Thread(new ThreadCrawler());
-//        thread.start();
-        Date end = new Date();
-        logger.info("多线程消耗时间: " + (end.getTime() - began.getTime()));
     }
 }
