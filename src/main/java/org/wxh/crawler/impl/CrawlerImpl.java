@@ -48,7 +48,7 @@ public class CrawlerImpl implements ICrawler {
             logger.info(target + "已下载至 -> " + path);
             HashLinkedQueue.addVisedUrl(target);
             try {
-                Set<String> urlLinks = this.parser.getAllLinks(path);
+                Set<String> urlLinks = this.parser.getHTMLLinks(path);
                 urlLinks.forEach(HashLinkedQueue::addUnvisedUrl);
             } catch (IOException e) {
                 e.printStackTrace();

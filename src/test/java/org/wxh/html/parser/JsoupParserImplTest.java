@@ -18,17 +18,16 @@ public class JsoupParserImplTest {
 
     @Test
     public void testGetAllLinks() throws Exception {
-        String url = "http://hzjira.cairenhui.com/issues/?filter=10310";
-        String filePath = fileDownload.downloadFile(url);
-        Set<String> urlSet = parser.getAllLinks(filePath);
-        for (String urlLink : urlSet) {
-            logger.debug("抓取链接: " + urlLink);
-        }
     }
 
     @Test
     public void testGetHTMLLinks() throws Exception {
-
+        String url = "http://hzjira.cairenhui.com/issues/?filter=10310";
+        String filePath = fileDownload.downloadFile(url);
+        Set<String> urlSet = parser.getHTMLLinks(filePath);
+        for (String urlLink : urlSet) {
+            logger.debug("抓取链接: " + urlLink);
+        }
     }
 
     @Test

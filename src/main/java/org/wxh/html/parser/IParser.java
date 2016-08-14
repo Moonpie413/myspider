@@ -27,7 +27,7 @@ public interface IParser {
      * 只提取html页面链接
      * @return html页面链接
      */
-    Set<String> getHTMLLinks(InputStream inputStream);
+    Set<String> getHTMLLinks(String filePath) throws IOException;
 
     /**
      * 只提取图片链接

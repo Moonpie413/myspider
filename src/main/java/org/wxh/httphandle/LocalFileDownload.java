@@ -68,13 +68,14 @@ public class LocalFileDownload implements IFileDownload {
             response = HttpClientUtil.getInstance().httpGet(url, HeaderBuilder.getHeaderList());
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                logger.error("请求url" + url + "失败:" + response.getStatusLine());
+                logger.error("请求url" + url + "失败" + response.getStatusLine());
             }
             HttpEntity entity = response.getEntity();
             filePath = EnvironmentUtil.getDownloadPath()
                     + File.separator + getFileNameByUrl(url, entity.getContentType().getValue());
             this.save(entity.getContent(), filePath);
         } catch (IOException e) {
+            logger.error("抓取并下载文件时出错");
             e.printStackTrace();
         } finally {
             get.releaseConnection();

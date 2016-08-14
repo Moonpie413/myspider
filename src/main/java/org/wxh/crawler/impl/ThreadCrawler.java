@@ -83,19 +83,21 @@ public class ThreadCrawler implements Runnable {
         // 添加到已访问队列
         if (!HashLinkedQueue.visedContains(url)) {
             HashLinkedQueue.addVisedUrl(url);
-            logger.debug("url [" + url + "] 添加到已访问队列");
+            logger.debug("[" + Thread.currentThread().getName() +  "]将 url [" + url + "] 添加到已访问队列");
         }
     }
 
     public synchronized void enqueUnvised(String url) {
-        if (!HashLinkedQueue.visedContains(url) && !HashLinkedQueue.unvisedContains(url)) {
-            HashLinkedQueue.addUnvisedUrl(url);
-            logger.debug("新的待访问url [" + url + "] 入队");
-            // 等待线程数大于等于最大线程数减一时唤醒
-            if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
-                notifyAll();
+        if (url != null) {
+            if (!HashLinkedQueue.visedContains(url) && !HashLinkedQueue.unvisedContains(url)) {
+                HashLinkedQueue.addUnvisedUrl(url);
+                logger.debug("[" + Thread.currentThread().getName() +  "] 将新的待访问url [" + url + "] 入队");
+                // 等待线程数大于等于最大线程数减一时唤醒
+                if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
+                    notifyAll();
+                }
+                waitCount = 0;
             }
-            waitCount = 0;
         }
     }
 
@@ -103,7 +105,7 @@ public class ThreadCrawler implements Runnable {
         Set<String> urlLinks = null;
         try {
             // 解析url放到urlLinks
-            urlLinks = parser.getAllLinks(path);
+            urlLinks = parser.getHTMLLinks(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,6 +123,7 @@ public class ThreadCrawler implements Runnable {
                 parse(path);
             }
         } catch (InterruptedException e) {
+            logger.error("线程 [" + Thread.currentThread().getName() + "]" + "发生错误, 错误信息: ");
             e.printStackTrace();
         }
     }
