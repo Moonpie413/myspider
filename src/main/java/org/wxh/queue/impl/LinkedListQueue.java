@@ -10,7 +10,7 @@ import java.util.LinkedList;
  */
 public class LinkedListQueue implements IQueue {
 
-    private LinkedList<String> linkedList = new LinkedList<>();
+    public LinkedList<String> linkedList = new LinkedList<>();
 
     @Override
     public void inQueue(String url) {
@@ -32,4 +32,10 @@ public class LinkedListQueue implements IQueue {
         return this.linkedList.contains(object);
     }
 
+    @Override
+    public String toString() {
+        return "LinkedListQueue{" +
+                "linkedList=" + linkedList +
+                '}';
+    }
 }

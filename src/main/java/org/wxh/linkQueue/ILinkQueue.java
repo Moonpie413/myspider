@@ -47,4 +47,8 @@ public interface ILinkQueue {
     boolean isUnVisedUrlEmpty();
 
     String unVisedUrlDeque();
+
+    boolean visedContains(String url);
+
+    boolean unvisedContains(String url);
 }

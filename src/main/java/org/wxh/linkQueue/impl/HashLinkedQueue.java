@@ -11,59 +11,59 @@ import java.util.HashSet;
  * Created by Maroon on 2016/8/7.
  * project: MySpider
  */
-public class HashLinkedQueue implements ILinkQueue {
+public class HashLinkedQueue {
 
     /**
      * 保存已访问队列
      */
-    private static HashSet<String> vised = new HashSet<>();
+    public static HashSet<String> vised = new HashSet<>();
 
     /**
      * 未访问队列
      */
-    private static IQueue unvised = new LinkedListQueue();
+    public static IQueue unvised = new LinkedListQueue();
 
-    @Override
-    public IQueue getUnvisedUrl() {
+    public static IQueue getUnvisedUrl() {
         return unvised;
     }
 
-    @Override
-    public void addUnvisedUrl(String url) {
+    public static void addUnvisedUrl(String url) {
         if (!StringUtils.isEmpty(url) && !vised.contains(url) && !unvised.contains(url)) {
             unvised.inQueue(url);
         }
     }
 
-    @Override
-    public void addVisedUrl(String url) {
+    public static void addVisedUrl(String url) {
         if (!StringUtils.isEmpty(url)) {
             vised.add(url);
         }
     }
 
-    @Override
-    public Integer getVisedUrlNum() {
+    public static Integer getVisedUrlNum() {
         return vised.size();
     }
 
-    @Override
-    public void removeVisedUrl(String url) {
+    public static void removeVisedUrl(String url) {
         vised.remove(url);
     }
 
-    @Override
-    public boolean isVisedUrlEmpty() {
+    public static boolean isVisedUrlEmpty() {
         return vised.isEmpty();
     }
 
-    @Override
-    public boolean isUnVisedUrlEmpty() {
+    public static boolean isUnVisedUrlEmpty() {
         return unvised.isEmpty();
     }
 
-    @Override
-    public String unVisedUrlDeque() {
+    public static String unVisedUrlDeque() {
         return unvised.deQueue();
+    }
+
+    public static boolean visedContains(String url) {
+        return vised.contains(url);
+    }
+
+    public static boolean unvisedContains(String url) {
+        return unvised.contains(url);
     }
 }

@@ -50,7 +50,7 @@ public class HttpClientUtil {
     }
 
     public HttpResponse httpGet(String url, List<Header> headers) throws IOException {
-        logger.info("发起httpGet: " + url + "...");
+        logger.info("[" + Thread.currentThread().getName()+ "]" + " 发起httpGet: " + url + "...");
         HttpGet httpGet = new HttpGet(url);
         if (headers != null) {
         headers.forEach(httpGet::setHeader);

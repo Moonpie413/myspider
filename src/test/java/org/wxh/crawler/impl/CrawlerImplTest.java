@@ -24,6 +24,6 @@ public class CrawlerImplTest {
 
     @Test
     public void testCrawing() throws Exception {
-        this.crawler.crawing();
+
     }
 }
