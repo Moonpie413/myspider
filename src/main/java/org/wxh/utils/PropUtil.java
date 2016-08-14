@@ -38,7 +38,7 @@ public class PropUtil {
         try (InputStream in = PropUtil.class.getClassLoader().getResourceAsStream(resourceName)) {
             if (in != null) {
                 prop.load(in);
-                logger.debug("读取配置文件{ " + fileName + " }成功");
+                logger.debug("读取配置文件 {" + fileName + "} 成功");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class PropUtil {
         try (InputStream in = PropUtil.class.getClassLoader().getResourceAsStream(resourceName)) {
             if (in != null) {
                 prop.load(in);
-                logger.debug("读取配置文件{ " + fileName + " }成功");
+                logger.debug("读取配置文件 {" + fileName + "} 成功");
             }
             Set<Entry<Object, Object>> set = prop.entrySet();
             for (Entry<Object, Object> entry : set) {

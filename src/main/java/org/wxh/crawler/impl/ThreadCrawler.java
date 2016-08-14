@@ -47,12 +47,12 @@ public class ThreadCrawler implements Runnable {
      * @throws InterruptedException
      */
     public synchronized String dequedURL() throws InterruptedException {
-        // 如果队列不为空
+        //关键点 循环返回url，必须要用while，因为队列为空可能只是暂时的状态，要一直检查
         while (true) {
             if (!HashLinkedQueue.isUnVisedUrlEmpty()) {
                 String resultUrl = StringUtils.handleRelativeUrl(HashLinkedQueue.unVisedUrlDeque(), Constant.BASE_URL);
                 enqueueVised(resultUrl);
-                logger.debug("url [" + resultUrl + "] 出队,准备爬取");
+                logger.debug("[" + Thread.currentThread().getName() + "] url [" + resultUrl + "] 出队,准备爬取");
                 return resultUrl;
             } else {
                 // 如果其他线程都在等待则全部唤醒
@@ -88,12 +88,13 @@ public class ThreadCrawler implements Runnable {
     }
 
     public synchronized void enqueUnvised(String url) {
-        if (url != null) {
+        if (StringUtils.isNotBlank(url)) {
             if (!HashLinkedQueue.visedContains(url) && !HashLinkedQueue.unvisedContains(url)) {
                 HashLinkedQueue.addUnvisedUrl(url);
                 logger.debug("[" + Thread.currentThread().getName() +  "] 将新的待访问url [" + url + "] 入队");
-                // 等待线程数大于等于最大线程数减一时唤醒
+                // 等待线程数大于等于最大线程数减一(只剩下自己或全都睡着了)时唤醒
                 if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
+                    logger.debug("------ 线程们好像都睡着了，拉起来干活 ------");
                     notifyAll();
                 }
                 waitCount = 0;
@@ -102,10 +103,12 @@ public class ThreadCrawler implements Runnable {
     }
 
     public synchronized void parse(String path) {
+        logger.debug("[" + Thread.currentThread().getName() + "] 正在解析文件: [" + path + "]");
         Set<String> urlLinks = null;
         try {
             // 解析url放到urlLinks
             urlLinks = parser.getHTMLLinks(path);
+            logger.debug("[" + Thread.currentThread().getName() + "] 文件解析完成");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,6 +121,7 @@ public class ThreadCrawler implements Runnable {
         logger.debug("[" + Thread.currentThread().getName() + "] " + "开始执行");
         String todoUrl;
         try {
+            // 一直从队列中获取url，为空的时候则什么都不做
             while ((todoUrl = dequedURL()) != null) {
                 String path = fileDownload.downloadFile(todoUrl);
                 parse(path);

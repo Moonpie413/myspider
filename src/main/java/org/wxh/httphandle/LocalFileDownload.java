@@ -74,6 +74,7 @@ public class LocalFileDownload implements IFileDownload {
             filePath = EnvironmentUtil.getDownloadPath()
                     + File.separator + getFileNameByUrl(url, entity.getContentType().getValue());
             this.save(entity.getContent(), filePath);
+            logger.debug("[" + Thread.currentThread().getName() + "] " + "文件 [" + filePath + "] 下载完成");
         } catch (IOException e) {
             logger.error("抓取并下载文件时出错");
             e.printStackTrace();

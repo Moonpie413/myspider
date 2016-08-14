@@ -50,7 +50,7 @@ public class HttpClientUtil {
     }
 
     public HttpResponse httpGet(String url, List<Header> headers) throws IOException {
-        logger.info("[" + Thread.currentThread().getName()+ "]" + " 发起httpGet: " + url + "...");
+        logger.info("[" + Thread.currentThread().getName()+ "]" + " 发起httpGet: [" + url + "]");
         HttpGet httpGet = new HttpGet(url);
         if (headers != null) {
         headers.forEach(httpGet::setHeader);
@@ -59,7 +59,7 @@ public class HttpClientUtil {
     }
 
     public HttpResponse httpGet(String url, Header[] headers) throws IOException {
-        logger.info("发起httpGet: " + url + "...");
+        logger.info("[" + Thread.currentThread().getName()+ "]" + " 发起httpGet: [" + url + "]");
         HttpGet httpGet = new HttpGet(url);
         if (headers != null) {
         httpGet.setHeaders(headers);
@@ -68,7 +68,7 @@ public class HttpClientUtil {
     }
 
     public HttpResponse httpPost(String url, List<Header> headers, Map<String, Object> params) throws IOException {
-        logger.info("发起httpPost: " + url + "...");
+        logger.info("[" + Thread.currentThread().getName()+ "]" + " 发起httpGet: [" + url + "]");
         HttpPost httpPost = new HttpPost(url);
         if (headers != null) {
             headers.forEach(httpPost::setHeader);
