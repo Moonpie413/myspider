@@ -5,6 +5,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.wxh.constant.Constant;
+import org.wxh.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,25 +24,13 @@ public class JsoupParserImpl implements IParser {
     private String charset = "UTF-8";
 
     @Override
-    public Set<String> getAllLinks(String filePath, String baseUri) throws IOException {
-        Set<String> urlSet = new HashSet<>();
-        Document document = Jsoup.parse(new File(filePath), charset, baseUri);
-        Elements links = document.getElementsByTag("a");
-        for (Element link : links) {
-            String linkHref = link.attr("href");
-            urlSet.add(linkHref);
-        }
-        return urlSet;
-    }
-
-    @Override
     public Set<String> getAllLinks(String filePath) throws IOException {
         Set<String> urlSet = new HashSet<>();
         Document document = Jsoup.parse(new File(filePath), charset);
         Elements links = document.getElementsByTag("a");
         for (Element link : links) {
             String linkHref = link.attr("href");
-            urlSet.add(linkHref);
+            urlSet.add(StringUtils.handleRelativeUrl(linkHref, Constant.BASE_URL));
         }
         return urlSet;
     }

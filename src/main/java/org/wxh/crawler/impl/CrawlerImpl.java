@@ -37,7 +37,7 @@ public class CrawlerImpl implements ICrawler {
         IFileDownload fileDownload = new LocalFileDownload();
         while (!HashLinkedQueue.isUnVisedUrlEmpty() && HashLinkedQueue.getVisedUrlNum() < 100) {
             //调用handleRelatuvePath处理url
-            String target = StringUtils.handleRelativePath(HashLinkedQueue.unVisedUrlDeque(), this.baseUrl);
+            String target = StringUtils.handleRelativeUrl(HashLinkedQueue.unVisedUrlDeque(), this.baseUrl);
             if (StringUtils.isBlank(target)) {
                 this.logger.error("请求的url不存在");
             }

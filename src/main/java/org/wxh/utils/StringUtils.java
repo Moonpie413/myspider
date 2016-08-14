@@ -6,14 +6,14 @@ package org.wxh.utils;
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
-    public static String handleRelativePath(String path, String baseUrl) {
-        if (isNotBlank(path) && isNotBlank(baseUrl)) {
+    public static String handleRelativeUrl(String url, String baseUrl) {
+        if (isNotBlank(url) && isNotBlank(baseUrl)) {
             //如果path是相对路径就将baseurl添加到path的前面
-            if (indexOf(path, "http") == -1) {
-                return baseUrl + path;
+            if (!startsWith(url, "http")) {
+                return baseUrl + url;
             }
         }
-        return path;
+        return url;
     }
 
 }

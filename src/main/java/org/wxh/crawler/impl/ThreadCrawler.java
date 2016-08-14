@@ -6,14 +6,12 @@ import org.wxh.html.parser.IParser;
 import org.wxh.html.parser.JsoupParserImpl;
 import org.wxh.httphandle.IFileDownload;
 import org.wxh.httphandle.LocalFileDownload;
-import org.wxh.linkQueue.ILinkQueue;
 import org.wxh.linkQueue.impl.HashLinkedQueue;
 import org.wxh.utils.StringUtils;
 import org.wxh.utils.ThreadPoolUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -52,19 +50,26 @@ public class ThreadCrawler implements Runnable {
         // 如果队列不为空
         while (true) {
             if (!HashLinkedQueue.isUnVisedUrlEmpty()) {
-                String resultUrl = StringUtils.handleRelativePath(HashLinkedQueue.unVisedUrlDeque(), Constant.BASE_URL);
-                enqueueURL(resultUrl);
-                logger.debug("url" + resultUrl + "出队");
+                String resultUrl = StringUtils.handleRelativeUrl(HashLinkedQueue.unVisedUrlDeque(), Constant.BASE_URL);
+                enqueueVised(resultUrl);
+                logger.debug("url [" + resultUrl + "] 出队,准备爬取");
                 return resultUrl;
             } else {
-                // 如果10个线程都在等待则全部唤醒
-                if (waitCount == ThreadPoolUtil.THREAD_NUM ) {
-                    notifyAll();
+                // 如果其他线程都在等待则全部唤醒
+                if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
                     waitCount = 0;
-                    logger.debug("所有线程都在等待，唤醒其他线程");
+                    logger.debug("所有线程都在等待，尝试唤醒其他线程");
+                    notifyAll();
+                    // 线程等待1秒，如果队列依旧为空则退出程序
+                    Thread.sleep(1000);
+                    if (HashLinkedQueue.isUnVisedUrlEmpty()) {
+                        logger.debug("所有线程都没事干了，洗洗睡吧");
+                        System.exit(0);
+                    }
                     return null;
                 }
                 else {
+                    // 若其他线程还有在运行的则进入等待状态
                     waitCount++;
                     logger.debug("线程" + Thread.currentThread().getName() + "进入等待状态");
                     logger.debug("当前等待线程数量: " + waitCount);
@@ -74,18 +79,22 @@ public class ThreadCrawler implements Runnable {
         }
     }
 
-    public synchronized void enqueueURL(String url) {
+    public synchronized void enqueueVised(String url) {
         // 添加到已访问队列
         if (!HashLinkedQueue.visedContains(url)) {
             HashLinkedQueue.addVisedUrl(url);
-            logger.debug("url" + url + "入队");
+            logger.debug("url [" + url + "] 添加到已访问队列");
         }
     }
 
     public synchronized void enqueUnvised(String url) {
         if (!HashLinkedQueue.visedContains(url) && !HashLinkedQueue.unvisedContains(url)) {
             HashLinkedQueue.addUnvisedUrl(url);
-            notifyAll();
+            logger.debug("新的待访问url [" + url + "] 入队");
+            // 等待线程数大于等于最大线程数减一时唤醒
+            if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
+                notifyAll();
+            }
             waitCount = 0;
         }
     }
@@ -93,13 +102,12 @@ public class ThreadCrawler implements Runnable {
     public synchronized void parse(String path) {
         Set<String> urlLinks = null;
         try {
+            // 解析url放到urlLinks
             urlLinks = parser.getAllLinks(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (urlLinks != null) {
-            urlLinks.forEach(this::enqueUnvised);
-        }
+        if (urlLinks != null) urlLinks.forEach(this::enqueUnvised);
     }
 
     @Override

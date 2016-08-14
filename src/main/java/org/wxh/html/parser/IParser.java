@@ -13,15 +13,6 @@ public interface IParser {
     /**
      * 解析本地html
      * @param filePath 文件路径
-     * @param baseUri 网址前缀
-     * @return
-     * @throws IOException
-     */
-    Set<String> getAllLinks(String filePath, String baseUri) throws IOException;
-
-    /**
-     * 解析本地html
-     * @param filePath 文件路径
      * @return
      * @throws IOException
      */

@@ -1,4 +1,4 @@
-import org.apache.commons.lang3.StringUtils;
+import org.wxh.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -19,7 +19,8 @@ public class SimpleTest {
     @Test
     public void StringUtilTest() {
         String testText = "https://www.baidu.com";
-        logger.debug(StringUtils.indexOf(testText, "https"));
+        logger.debug(StringUtils.indexOf(testText, "http"));
+        logger.debug(StringUtils.startsWith(testText, "http"));
     }
 
     @Test
