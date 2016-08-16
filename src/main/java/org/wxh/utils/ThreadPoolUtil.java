@@ -16,7 +16,7 @@ public class ThreadPoolUtil {
     private ThreadPoolUtil() {}
 
     // 活动线程数，也用来初始化值为10
-    public static int THREAD_NUM = 10;
+    public static int THREAD_NUM = 100;
     private List<Thread> threadList = new ArrayList<>(THREAD_NUM);
 
     //初始化线程池
