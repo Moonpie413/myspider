@@ -10,10 +10,10 @@ import java.util.List;
  * Created by Maroon on 2016/8/13.
  * project: MySpider
  */
-public class ThreadPoolUtil {
-    private static Logger logger = Logger.getLogger(ThreadPoolUtil.class);
-    private static ThreadPoolUtil poolInstance;
-    private ThreadPoolUtil() {}
+public class FakeThreadPoolUtil {
+    private static Logger logger = Logger.getLogger(FakeThreadPoolUtil.class);
+    private static FakeThreadPoolUtil poolInstance;
+    private FakeThreadPoolUtil() {}
 
     // 活动线程数，也用来初始化值为10
     public static int THREAD_NUM = 100;
@@ -36,9 +36,9 @@ public class ThreadPoolUtil {
         threadList.add(thread);
     }
 
-    public static ThreadPoolUtil getInstance() {
+    public static FakeThreadPoolUtil getInstance() {
         if (poolInstance == null) {
-            poolInstance = new ThreadPoolUtil();
+            poolInstance = new FakeThreadPoolUtil();
             poolInstance.init();
             return poolInstance;
         }

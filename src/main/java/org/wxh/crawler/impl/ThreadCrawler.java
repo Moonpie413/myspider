@@ -8,7 +8,7 @@ import org.wxh.httphandle.IFileDownload;
 import org.wxh.httphandle.LocalFileDownload;
 import org.wxh.linkQueue.impl.HashLinkedQueue;
 import org.wxh.utils.StringUtils;
-import org.wxh.utils.ThreadPoolUtil;
+import org.wxh.utils.FakeThreadPoolUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class ThreadCrawler implements Runnable {
                 return resultUrl;
             } else {
                 // 如果其他线程都在等待则全部唤醒
-                if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
+                if (waitCount >= FakeThreadPoolUtil.THREAD_NUM - 1) {
                     waitCount = 0;
                     logger.debug("所有线程都在等待，尝试唤醒其他线程");
                     notifyAll();
@@ -93,7 +93,7 @@ public class ThreadCrawler implements Runnable {
                 HashLinkedQueue.addUnvisedUrl(url);
                 logger.debug("[" + Thread.currentThread().getName() +  "] 将新的待访问url [" + url + "] 入队");
                 // 等待线程数大于等于最大线程数减一(只剩下自己或全都睡着了)时唤醒
-                if (waitCount >= ThreadPoolUtil.THREAD_NUM - 1) {
+                if (waitCount >= FakeThreadPoolUtil.THREAD_NUM - 1) {
                     logger.debug("------ 线程们好像都睡着了，拉起来干活 ------");
                     notifyAll();
                 }
