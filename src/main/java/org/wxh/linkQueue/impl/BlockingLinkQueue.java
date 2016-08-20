@@ -77,4 +77,9 @@ public class BlockingLinkQueue implements ILinkQueue {
     public boolean unvisedContains(String url) {
         return this.unvisedURL.contains(url);
     }
+
+    @Override
+    public int getUnVisedUrlSize() {
+        return this.unvisedURL.size();
+    }
 }

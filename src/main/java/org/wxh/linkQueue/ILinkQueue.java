@@ -43,4 +43,6 @@ public interface ILinkQueue {
     boolean visedContains(String url);
 
     boolean unvisedContains(String url);
+
+    int getUnVisedUrlSize();
 }

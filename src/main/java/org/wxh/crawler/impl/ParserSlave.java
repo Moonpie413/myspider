@@ -18,10 +18,16 @@ public class ParserSlave implements Runnable {
     private BlockingQueue blockingQueue;
     private MyCrawler myCrawler;
     private IParser parser = new JsoupParserImpl();
+    private int maxTask;
 
     public ParserSlave(BlockingQueue blockingQueue, MyCrawler myCrawler) {
         this.blockingQueue = blockingQueue;
         this.myCrawler = myCrawler;
+    }
+
+    public ParserSlave(BlockingQueue blockingQueue, MyCrawler myCrawler, int maxTask) {
+        this(blockingQueue, myCrawler);
+        this.maxTask = maxTask;
     }
 
     /**
@@ -55,14 +61,38 @@ public class ParserSlave implements Runnable {
         return urlLinks;
     }
 
+    public int getMaxTask() {
+        return maxTask;
+    }
+
+    public void setMaxTask(int maxTask) {
+        this.maxTask = maxTask;
+    }
+
     @Override
     public void run() {
         String filePath;
-        while ((filePath = this.getNextPath()) != null) {
-            Set<String> urlLinks = this.parseFile(filePath);
-            if (urlLinks != null) {
-                for (String url : urlLinks) {
-                    this.myCrawler.parserCallback(url);
+        while (true) {
+            if ((filePath = this.getNextPath()) != null) {
+                logger.debug("[" + Thread.currentThread().getName() + "] " + "开始解析 [" + filePath + "]");
+                Set<String> urlLinks = this.parseFile(filePath);
+                if (urlLinks != null) {
+                    for (String url : urlLinks) {
+                        this.myCrawler.parserCallback(url);
+                    }
+                    logger.debug("[" + Thread.currentThread().getName() + "] " + "文件 [" + filePath + "] 解析完成");
+                }
+            } else {
+                try {
+                    // 如果等待两秒后队列中没有新的任务就退出
+                    logger.debug("[" + Thread.currentThread().getName() + "] " + "进入等待状态");
+                    Thread.sleep(2000);
+                    if (this.getNextPath() == null) {
+                        logger.debug("[" + Thread.currentThread().getName() + "] " + "已退出");
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
